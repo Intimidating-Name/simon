@@ -1,17 +1,39 @@
 import random
-#import colorama
+import time
+import os
+import sys
+
 
 class Game:
     """game controller"""
 
-    def __init__(self):
+    def __init__(self, max_levels):
         self.over = False
         self.simon = Simon()
         self.player = Player()
         self.level = self.simon.get_level_number()
+        self.max_levels = max_levels
 
     def next_level(self):
         print("next level")
+        self.simon.add_color()
+        self.player.increase_score()
+        self.print_level()
+        self.test_player()
+
+    def print_level(self):
+        for x in self.simon.history:
+            print(x)
+            time.sleep(1)
+            os.system('clear')
+
+    def test_player(self):
+        for x in self.simon.history:
+            test_result = input("What is the next color?")
+            if test_result is x[0]:
+                print("You have passed this test. On to the next.")
+            else:
+                print("You lose.")
 
 class Player:
     """player model"""
@@ -27,16 +49,18 @@ class Simon:
 
     def __init__(self):
         self.history = []
-        self.colors = [('b', "BLUE"),('g', "GREEN"),('r', "RED"),('f', "PURPLE"), ('y', "YELLOW"), ('t', "BROWN")]
+        self.colors = [('b', "BLUE"),('g', "GREEN"),('r', "RED"),('f', "PURPLE"), ('y', "YELLOW"), ('t', "BROWN"), ('v', "MAGENTA")]
 
     def get_level_number(self):
         return len(self.history)
 
-game = Game()
+    def add_color(self):
+        self.history.append(random.choice(self.colors))
+
+game = Game(22)
+
+os.system('clear')
+
 while not game.over:
-    print(game.level)
-    print(game.player.score)
-    game.player.increase_score()
-    print(game.player.score)
-    print(game.simon.colors)
+    game.next_level()
     game.over = True
