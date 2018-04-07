@@ -32,8 +32,11 @@ class Game:
             test_result = input("What is the next color?")
             if test_result is x[0]:
                 print("You have passed this test. On to the next.")
+                self.player.increase_score()
             else:
                 print("You lose.")
+                self.over = True
+                break
 
 class Player:
     """player model"""
@@ -62,5 +65,6 @@ game = Game(22)
 os.system('clear')
 
 while not game.over:
+    print("The next level is level number " + str(game.simon.get_level_number()))
     game.next_level()
-    game.over = True
+    print("Your current score is " + str(game.player.score))
