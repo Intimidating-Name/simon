@@ -2,6 +2,7 @@ import random
 import time
 import os
 import sys
+import colorama
 
 
 class Game:
@@ -23,9 +24,24 @@ class Game:
 
     def print_level(self):
         for x in self.simon.history:
-            print(x)
+            self.clear_screen()
+            print(self.get_color(x)+str(x))
+            print(colorama.Fore.WHITE)
             time.sleep(1)
-            os.system('clear')
+
+    def get_color(self, tuple):
+        if tuple[1] is "BLUE":
+            return colorama.Fore.BLUE
+        if tuple[1] is "GREEN":
+            return colorama.Fore.GREEN
+        if tuple[1] is "RED":
+            return colorama.Fore.RED
+        if tuple[1] is "YELLOW":
+            return colorama.Fore.YELLOW
+        if tuple[1] is "CYAN":
+            return colorama.Fore.CYAN
+        if tuple[1] is "MAGENTA":
+            return colorama.Fore.MAGENTA
 
     def test_player(self):
         for x in self.simon.history:
@@ -37,6 +53,9 @@ class Game:
                 print("You lose.")
                 self.over = True
                 break
+
+    def clear_screen(self):
+        print("\033[H\033[J")
 
 class Player:
     """player model"""
@@ -52,7 +71,7 @@ class Simon:
 
     def __init__(self):
         self.history = []
-        self.colors = [('b', "BLUE"),('g', "GREEN"),('r', "RED"),('f', "PURPLE"), ('y', "YELLOW"), ('t', "BROWN"), ('v', "MAGENTA")]
+        self.colors = [('b', "BLUE"), ('g', "GREEN"), ('r', "RED"), ('y', "YELLOW"), ('t', "CYAN"), ('v', "MAGENTA")]
 
     def get_level_number(self):
         return len(self.history)
@@ -62,7 +81,7 @@ class Simon:
 
 game = Game(22)
 
-os.system('clear')
+game.clear_screen()
 
 while not game.over:
     print("The next level is level number " + str(game.simon.get_level_number()))
