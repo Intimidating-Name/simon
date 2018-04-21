@@ -14,6 +14,8 @@ class Game:
         self.player = Player()
         self.level = self.simon.get_level_number()
         self.max_levels = max_levels
+        self.regular_mode = False
+        self.timeout = 2
 
     def next_level(self):
         print("next level")
@@ -21,13 +23,16 @@ class Game:
         self.player.increase_score()
         self.print_level()
         self.test_player()
+        self.timeout = self.timeout - (self.timeout * 0.1)
 
     def print_level(self):
         for x in self.simon.history:
             self.clear_screen()
-            print(self.get_color(x)+str(x))
+            print(self.get_color(x) if self.regular_mode else self.get_random_color()+str(x))
             print(colorama.Fore.WHITE)
-            time.sleep(1)
+            time.sleep(self.timeout)
+            self.clear_screen()
+            time.sleep(0.499995)
 
     def get_color(self, tuple):
         if tuple[1] is "BLUE":
@@ -42,6 +47,11 @@ class Game:
             return colorama.Fore.CYAN
         if tuple[1] is "MAGENTA":
             return colorama.Fore.MAGENTA
+
+    def get_random_color(self):
+        random_color_tuple = random.choice(self.simon.colors)
+        random_color = self.get_color(random_color_tuple)
+        return random_color
 
     def test_player(self):
         for x in self.simon.history:
@@ -82,6 +92,17 @@ class Simon:
 game = Game(22)
 
 game.clear_screen()
+
+mode_choice = input("Do you want to play regular or cognitive dissonance?")
+
+if mode_choice is "regular":
+    game.regular_mode = True
+elif mode_choice is "cognitive dissonance":
+    game.regular_mode = False
+elif mode_choice is "the second one":
+    print("The words are right there for you to spell from. If you are curious, cognitive dissonance is where there is a color but it's not the color that the color is.")
+else:
+    print("You have been defaulted to cognitive dissonance.")
 
 while not game.over:
     print("The next level is level number " + str(game.simon.get_level_number()))
